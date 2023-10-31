@@ -1,0 +1,4 @@
+---
+redis_password: somesomepassword
+redis_auth: somesome
+redis_cluster_replicas: 3

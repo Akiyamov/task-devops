@@ -1,0 +1,7 @@
+---
+- name: Установка кластера Redis
+  hosts: test_redis_nodes
+  become: yes
+
+  roles:
+    - redis_install
