@@ -1,7 +1,11 @@
 ---
+- name: Установка библиотек Python
+  hosts: all
+  become: true 
+  roles:
+    - py-docker
 - name: Установка кластера Redis
   hosts: test_redis_nodes
   become: yes
-
   roles:
     - redis_install

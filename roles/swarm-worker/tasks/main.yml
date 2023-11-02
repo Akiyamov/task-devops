@@ -1,0 +1,6 @@
+---
+- name: Добавление Worker ноды к Swarm 
+  docker_swarm:
+    state: join
+    advertise_addr: worker
+    join_token: "{{ hostvars['10.0.0.1']['swarm_info'] }}"

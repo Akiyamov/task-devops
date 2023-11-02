@@ -1,0 +1,16 @@
+- hosts: all
+  become: true 
+  roles:
+    - py-docker
+- hosts: node01
+  become: true
+  roles:
+    - swarm-manager
+- hosts: node02
+  become: true
+  roles:
+    - swarm-worker
+- hosts: node01
+  become: true
+  roles:
+    - swarm-apply

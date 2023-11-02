@@ -1,0 +1,6 @@
+---
+- name: Установка библиотек Python
+  pip:
+    name:
+      - docker
+      - pyyaml

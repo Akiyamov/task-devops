@@ -16,9 +16,10 @@
       src: "docker-compose.j2"
       dest: "/etc/docker_compose/docker-compose.yml"
   - name: Запуск Docker Compose
-    shell:
-      chdir: /etc/docker_compose
-      cmd: "docker compose up -d"
+    community.docker.docker_compose:
+      project_src: "/etc/docker_compose"
+      files:
+        - docker-compose.yml
   - name: Создание SRV записи
     community.general.cloudflare_dns:
       domain: example.com
@@ -29,7 +30,7 @@
       weight: 20
       type: SRV
       value: "{{ item }}"
-      api_toke: !vault | # Пример записи из Vault
+      api_token: !vault | # Пример записи из Vault
           $ANSIBLE_VAULT;1.1;AES256
           63343439616634613230383166326561643736333261633438353339323031623031333231353739
           6463636439383331363032303862346363326336303862310a633533356566613863633664656639

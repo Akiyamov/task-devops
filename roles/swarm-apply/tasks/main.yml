@@ -1,0 +1,42 @@
+---
+- name: Создание папки с конфигурацией Docker
+  file:
+    path: "/etc/docker_compose"
+    state: directory
+- name: Создание папки с конфигурацией Redis
+  file:
+    path: "/var/lib/redis/"
+    state: directory
+- name: Загрузка файла конфигурации Redis
+  copy:
+    src: redis.conf
+    dest: "/var/lib/redis/"
+- name: Загрузка файла конфигурации Docker
+  template:
+    src: "docker-compose.j2"
+    dest: "/etc/docker_compose/docker-compose.yml"
+- name: Запуск Redis Cluster
+  docker_stack:
+    state: present
+    name: Redis-cluster
+    compose: "/etc/docker_compose/docker-compose.yml"
+- name: Создание SRV записи
+  community.general.cloudflare_dns:
+    domain: example.com
+    service: redis
+    proto: tcp
+    port: 6379 # Стандартный порт Redis
+    priority: 10
+    weight: 20
+    type: SRV
+    value: "{{ item }}"
+    api_token: !vault | # Пример записи из Vault
+        $ANSIBLE_VAULT;1.1;AES256
+        63343439616634613230383166326561643736333261633438353339323031623031333231353739
+        6463636439383331363032303862346363326336303862310a633533356566613863633664656639
+        63313935653134353466393461353463366138653062326634656166383832633563616636353031
+        6437653033663562350a313437653531383337643666323564373963333061353435643038313737
+        61303865323036393362336237343834346134386630356565386362636337306261
+  loop:
+    - node01.example.com
+    - node02.example.com
